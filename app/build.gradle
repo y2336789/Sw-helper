@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.bliss.csc.sw_helper"
-        minSdkVersion 16
+        minSdkVersion 23
         multiDexEnabled true
         targetSdkVersion 30
         versionCode 1
