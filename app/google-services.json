@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "680508708586",
+    "project_id": "sw-helper",
+    "storage_bucket": "sw-helper.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:680508708586:android:6ff2ccc1cd74e534e2a993",
+        "android_client_info": {
+          "package_name": "com.bliss.csc.sw_helper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "680508708586-t4r9ubh23jp8l68mfto3fgu3mc92hb0b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASEc2isZeJn1CKbQVRoHmmkaOalNuOjuA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "680508708586-t4r9ubh23jp8l68mfto3fgu3mc92hb0b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
