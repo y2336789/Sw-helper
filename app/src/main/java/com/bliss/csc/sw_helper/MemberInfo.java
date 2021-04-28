@@ -7,12 +7,14 @@ public class MemberInfo {
     private String hakbun;
     private String PhoneNumber;
     private String birthday;
+    private String photoUrl;
 
-    public MemberInfo(String name, String hakbun, String PhoneNumber, String birthday){
+    public MemberInfo(String name, String hakbun, String PhoneNumber, String birthday, String photoUrl){
         this.name = name;
         this.hakbun = hakbun;
         this.PhoneNumber = PhoneNumber;
         this.birthday = birthday;
+        this.photoUrl = photoUrl;
     }
 
     public String getName(){
@@ -41,6 +43,13 @@ public class MemberInfo {
     }
     public void setBirthday(String birthday){
         this.birthday = birthday;
+    }
+
+    public String getPhotoUrl(){
+        return this.photoUrl;
+    }
+    public void setPhotoUrl(String photoUrl){
+        this.photoUrl = photoUrl;
     }
 
 
