@@ -69,9 +69,7 @@ public class MemberInitActivity extends AppCompatActivity {
         if(name.length() > 0 && phoneNumber.length() > 9 && birthday.length() > 5 && hakbun.length() > 9) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-
             MemberInfo memberInfo = new MemberInfo(name,hakbun,phoneNumber,birthday);
-
             if(user != null){
                 db.collection("users").document(user.getUid()).set(memberInfo)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
