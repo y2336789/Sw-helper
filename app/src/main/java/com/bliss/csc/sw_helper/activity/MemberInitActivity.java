@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import com.bliss.csc.sw_helper.MemberInfo;
 import com.bliss.csc.sw_helper.R;
 import com.bliss.csc.sw_helper.activity.CameraActivity;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,7 +40,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class MemberInitActivity extends AppCompatActivity {
+public class MemberInitActivity extends BasicActivity {
     private static final String TAG = "MemberInitActivity";
     private ImageView profileImageView;
     private String profilePath;
@@ -71,8 +72,7 @@ public class MemberInitActivity extends AppCompatActivity {
             case 0 : {
                 if (resultCode == Activity.RESULT_OK) {
                     profilePath = data.getStringExtra("profilePath");
-                    Bitmap bmp = BitmapFactory.decodeFile(profilePath);
-                    profileImageView.setImageBitmap(bmp);
+                    Glide.with(this).load(profilePath).centerCrop().override(500).into(profileImageView);
                 }
                 break;
             }
@@ -131,47 +131,51 @@ public class MemberInitActivity extends AppCompatActivity {
     }
 
 
-    private void profileUpdate(){
+    private void profileUpdate() {
         final String name = ((EditText) findViewById(R.id.et_name)).getText().toString();
         final String hakbun = ((EditText) findViewById(R.id.et_hakbun)).getText().toString();
         final String phoneNumber = ((EditText) findViewById(R.id.et_phonenumber)).getText().toString();
         final String birthday = ((EditText) findViewById(R.id.et_birthday)).getText().toString();
 
-        if(name.length() > 0 && phoneNumber.length() > 9 && birthday.length() > 5 && hakbun.length() > 9) {
+        if (name.length() > 0 && phoneNumber.length() > 9 && birthday.length() > 5 && hakbun.length() > 9) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             user = FirebaseAuth.getInstance().getCurrentUser();
-            final StorageReference mountainImagesRef = storageRef.child("images/"+user.getUid()+"/profileImage.jpg");
+            final StorageReference mountainImagesRef = storageRef.child("images/" + user.getUid() + "/profileImage.jpg");
 
-            try {
-                InputStream stream = new FileInputStream(new File(profilePath));
-                UploadTask uploadTask = mountainImagesRef.putStream(stream);
-                uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
+            if (profilePath == null) {
+                MemberInfo memberInfo = new MemberInfo(name, hakbun, phoneNumber, birthday);
+                uploader(memberInfo);
+            } else {
+                try {
+                    InputStream stream = new FileInputStream(new File(profilePath));
+                    UploadTask uploadTask = mountainImagesRef.putStream(stream);
+                    uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+                            return mountainImagesRef.getDownloadUrl();
                         }
-                        return mountainImagesRef.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            Uri downloadUri = task.getResult();
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                Uri downloadUri = task.getResult();
 
-
-                            MemberInfo memberInfo = new MemberInfo(name,hakbun,phoneNumber,birthday,downloadUri.toString());
-                            uploader(memberInfo);
-                        } else {
-                            startToast("회원정보를 보내는데 실패하였습니다.");
+                                MemberInfo memberInfo = new MemberInfo(name, hakbun, phoneNumber, birthday, downloadUri.toString());
+                                uploader(memberInfo);
+                            } else {
+                                startToast("회원정보를 보내는데 실패하였습니다.");
+                            }
                         }
-                    }
-                });
-            } catch (FileNotFoundException e) {
-                Log.e("로그", "에러: " + e.toString());
+                    });
+                } catch (FileNotFoundException e) {
+                    Log.e("로그", "에러: " + e.toString());
+                }
             }
-        } else {
+        } else{
             startToast("회원정보를 입력해주세요.");
         }
     }

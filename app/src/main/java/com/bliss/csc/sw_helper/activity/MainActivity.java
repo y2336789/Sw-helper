@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -24,7 +25,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BasicActivity {
     private static final String TAG = "MemberInitActivity";
 
     private DrawerLayout drawerLayout;
@@ -60,8 +61,6 @@ public class MainActivity extends AppCompatActivity {
         if(user == null) {
             mystartActivity(LoginActivity.class);
         }else {
-            mystartActivity(MemberInitActivity.class);
-
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             DocumentReference docRef = db.collection("users").document(user.getUid());
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -84,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+
         findViewById(R.id.btn_logout).setOnClickListener(onClickListener);
+        findViewById(R.id.floatingActionButton).setOnClickListener(onClickListener);
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -94,6 +95,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.btn_logout:
                     FirebaseAuth.getInstance().signOut();
                     mystartActivity(LoginActivity.class);
+                    break;
+                case R.id.floatingActionButton:
+                    mystartActivity(WritePostActivity.class);
                     break;
             }
         }
