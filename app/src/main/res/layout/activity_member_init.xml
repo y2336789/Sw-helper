@@ -80,11 +80,17 @@
                 android:layout_height="wrap_content"
                 android:text="확인" />
 
+            <Button
+                android:id="@+id/picture_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="사진촬영" />
+
         </LinearLayout>
 
     </LinearLayout>
 
-    <androidx.cardview.widget.CardView
+    <!--<androidx.cardview.widget.CardView
         android:id="@+id/buttonsCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -99,11 +105,7 @@
             android:orientation="vertical"
             android:padding="5dp">
 
-            <Button
-                android:id="@+id/picture_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="사진촬영" />
+
 
             <Button
                 android:id="@+id/gallery_btn"
@@ -112,6 +114,6 @@
                 android:text="갤러리" />
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>-->
 
 </RelativeLayout>

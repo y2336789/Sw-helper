@@ -4,8 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,15 +12,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.bliss.csc.sw_helper.MemberInfo;
 import com.bliss.csc.sw_helper.R;
-import com.bliss.csc.sw_helper.activity.CameraActivity;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,7 +30,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -56,7 +51,6 @@ public class MemberInitActivity extends BasicActivity {
 
         findViewById(R.id.btn_check).setOnClickListener(onClickListener);
         findViewById(R.id.picture_btn).setOnClickListener(onClickListener);
-        findViewById(R.id.gallery_btn).setOnClickListener(onClickListener);
     }
 
     @Override
@@ -72,7 +66,10 @@ public class MemberInitActivity extends BasicActivity {
             case 0 : {
                 if (resultCode == Activity.RESULT_OK) {
                     profilePath = data.getStringExtra("profilePath");
-                    Glide.with(this).load(profilePath).centerCrop().override(500).into(profileImageView);
+                    Glide.with(this).load(profilePath).centerCrop().override(500)
+                            .signature(new ObjectKey(System.currentTimeMillis()))
+                            .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE).into(profileImageView);
                 }
                 break;
             }
@@ -87,17 +84,6 @@ public class MemberInitActivity extends BasicActivity {
                     profileUpdate();
                     break;
                 case R.id.profileimageView:
-                    CardView cardView = findViewById(R.id.buttonsCardView);
-                    if(cardView.getVisibility() == View.VISIBLE){
-                        cardView.setVisibility(View.GONE);
-                    }else{
-                        cardView.setVisibility(View.VISIBLE);
-                    }
-                    break;
-                case R.id.picture_btn:
-                    mystartActivity(CameraActivity.class);
-                    break;
-                case R.id.gallery_btn:
                     if (ContextCompat.checkSelfPermission(MemberInitActivity.this,
                             Manifest.permission.READ_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
@@ -106,12 +92,16 @@ public class MemberInitActivity extends BasicActivity {
                                 1);
                         if (ActivityCompat.shouldShowRequestPermissionRationale(MemberInitActivity.this,
                                 Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
                         } else {
                             startToast("권한을 허용해 주세요");
                         }
                     }else{
                         mystartActivity(GalleryActivity.class);
                     }
+                    break;
+                case R.id.picture_btn:
+                    mystartActivity(CameraActivity.class);
                     break;
             }
         }

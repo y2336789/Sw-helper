@@ -1,7 +1,5 @@
 package com.bliss.csc.sw_helper;
 
-import android.widget.EditText;
-
 public class MemberInfo {
     private String name;
     private String hakbun;

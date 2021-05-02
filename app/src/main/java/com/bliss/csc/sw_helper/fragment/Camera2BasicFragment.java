@@ -58,10 +58,8 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.bliss.csc.sw_helper.R;
 import com.bliss.csc.sw_helper.view.AutoFitTextureView;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

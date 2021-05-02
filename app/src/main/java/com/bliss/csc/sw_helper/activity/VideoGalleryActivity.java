@@ -11,7 +11,7 @@ import com.bliss.csc.sw_helper.R;
 import com.bliss.csc.sw_helper.adapter.GalleryAdapter;
 import java.util.ArrayList;
 
-public class GalleryActivity extends BasicActivity {
+public class VideoGalleryActivity extends BasicActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -36,10 +36,10 @@ public class GalleryActivity extends BasicActivity {
         Cursor cursor;
         int column_index_data, column_index_folder_name;
         String PathOfImage = null;
-        uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
 
         String[] projection = { MediaStore.MediaColumns.DATA,
-                MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
+                MediaStore.Video.Media.BUCKET_DISPLAY_NAME };
 
         cursor = activity.getContentResolver().query(uri, projection, null,
                 null, null);
