@@ -67,6 +67,7 @@ public class BoardActivity extends BasicActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(BoardActivity.this));
     }
 
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -79,10 +80,12 @@ public class BoardActivity extends BasicActivity {
                             final ArrayList<PostInfo> postList = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                postList.add(new PostInfo(document.getData().get("title").toString(),
+                                postList.add(new PostInfo(
+                                        document.getData().get("title").toString(),
                                         (ArrayList<String>) document.getData().get("contents"),
                                         document.getData().get("publisher").toString(),
-                                        new Date(document.getDate("createdAt").getTime())));
+                                        new Date(document.getDate("createdAt").getTime()),
+                                        document.getId().toString()));
                             }
 
                             RecyclerView.Adapter mAdapter = new BoardAdapter(BoardActivity.this, postList);
@@ -99,6 +102,8 @@ public class BoardActivity extends BasicActivity {
         Intent intent = new Intent(this, c);
         startActivity(intent);
     }
+
+
 }
 
 
