@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.bliss.csc.sw_helper.R;
-import com.bliss.csc.sw_helper.WriteInfo;
+import com.bliss.csc.sw_helper.PostInfo;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,7 +34,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class WritePostActivity extends BasicActivity{
+public class WritePostActivity extends BasicActivity {
     private static final String TAG = "WritePostActivity";
     private FirebaseUser user;
     private ArrayList<String> pathList = new ArrayList<>();
@@ -44,6 +43,7 @@ public class WritePostActivity extends BasicActivity{
     private ImageView selectedImageVIew;
     private EditText selectedEditText;
     private int pathCount, successCount;
+    private RelativeLayout loaderLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +52,7 @@ public class WritePostActivity extends BasicActivity{
 
         parent = findViewById(R.id.contentsLayout);
         buttonsBackgroundLayout = findViewById(R.id.buttonsBackgroundLayout);
+        loaderLayout = findViewById(R.id.loaderlayout);
 
         buttonsBackgroundLayout.setOnClickListener(onClickListener);
         findViewById(R.id.check).setOnClickListener(onClickListener);
@@ -64,7 +65,7 @@ public class WritePostActivity extends BasicActivity{
         findViewById(R.id.title_editText).setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     selectedEditText = null;
                 }
             }
@@ -86,11 +87,11 @@ public class WritePostActivity extends BasicActivity{
                     linearLayout.setLayoutParams(layoutParams);
                     linearLayout.setOrientation(LinearLayout.VERTICAL);
 
-                    if(selectedEditText == null){
+                    if (selectedEditText == null) {
                         parent.addView(linearLayout);
-                    }else{
-                        for(int i = 0; i < parent.getChildCount(); i++){
-                            if(parent.getChildAt(i) == selectedEditText.getParent()){
+                    } else {
+                        for (int i = 0; i < parent.getChildCount(); i++) {
+                            if (parent.getChildAt(i) == selectedEditText.getParent()) {
                                 parent.addView(linearLayout, i + 1);
                                 break;
                             }
@@ -129,7 +130,7 @@ public class WritePostActivity extends BasicActivity{
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.check:
                     storageUpload();
                     break;
@@ -140,16 +141,16 @@ public class WritePostActivity extends BasicActivity{
                     myStartActivity(VideoGalleryActivity.class, 0);
                     break;
                 case R.id.buttonsBackgroundLayout:
-                    if(buttonsBackgroundLayout.getVisibility() == View.VISIBLE){
+                    if (buttonsBackgroundLayout.getVisibility() == View.VISIBLE) {
                         buttonsBackgroundLayout.setVisibility(View.GONE);
                     }
                     break;
                 case R.id.imageModify:
-                    myStartActivity(GalleryActivity.class,1); //1 써줘야 할수도?
+                    myStartActivity(GalleryActivity.class, 1); //1 써줘야 할수도?
                     buttonsBackgroundLayout.setVisibility(View.GONE);
                     break;
                 case R.id.videoModify:
-                    myStartActivity(VideoGalleryActivity.class,1); //1 써줘야 할지도?
+                    myStartActivity(VideoGalleryActivity.class, 1); //1 써줘야 할지도?
                     buttonsBackgroundLayout.setVisibility(View.GONE);
                     break;
                 case R.id.delete:
@@ -163,7 +164,7 @@ public class WritePostActivity extends BasicActivity{
     View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if(hasFocus){
+            if (hasFocus) {
                 selectedEditText = (EditText) v;
             }
         }
@@ -173,6 +174,7 @@ public class WritePostActivity extends BasicActivity{
         final String title = ((EditText) findViewById(R.id.title_editText)).getText().toString();
 
         if (title.length() > 0) {
+            loaderLayout.setVisibility(View.VISIBLE);
             final ArrayList<String> contentsList = new ArrayList<>();
             user = FirebaseAuth.getInstance().getCurrentUser();
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -180,21 +182,22 @@ public class WritePostActivity extends BasicActivity{
             FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
             final DocumentReference documentReference = firebaseFirestore.collection("posts").document();
 
-            for(int i = 0; i < parent.getChildCount(); i++){
-                LinearLayout linearLayout = (LinearLayout)parent.getChildAt(i);
-                for(int ii = 0; ii < linearLayout.getChildCount(); ii++){
+            for (int i = 0; i < parent.getChildCount(); i++) {
+                LinearLayout linearLayout = (LinearLayout) parent.getChildAt(i);
+                for (int ii = 0; ii < linearLayout.getChildCount(); ii++) {
                     View view = linearLayout.getChildAt(ii);
-                    if(view instanceof EditText){
-                        String text = ((EditText)view).getText().toString();
-                        if(text.length() > 0){
+                    if (view instanceof EditText) {
+                        String text = ((EditText) view).getText().toString();
+                        if (text.length() > 0) {
                             contentsList.add(text);
                         }
                     } else {
                         contentsList.add(pathList.get(pathCount));
-                        final StorageReference mountainImagesRef = storageRef.child("posts/" + documentReference.getId() + "/"+pathCount+".jpg");
+                        String[] pathArray = pathList.get(pathCount).split("\\.");
+                        final StorageReference mountainImagesRef = storageRef.child("posts/" + documentReference.getId() + "/" + pathCount + "." + pathArray[pathArray.length - 1]);
                         try {
                             InputStream stream = new FileInputStream(new File(pathList.get(pathCount)));
-                            StorageMetadata metadata = new StorageMetadata.Builder().setCustomMetadata("index",""+(contentsList.size()-1)).build();
+                            StorageMetadata metadata = new StorageMetadata.Builder().setCustomMetadata("index", "" + (contentsList.size() - 1)).build();
                             UploadTask uploadTask = mountainImagesRef.putStream(stream, metadata);
                             uploadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -210,12 +213,12 @@ public class WritePostActivity extends BasicActivity{
                                         public void onSuccess(Uri uri) {
                                             contentsList.set(index, uri.toString());
                                             successCount++;
-                                            if(pathList.size() == successCount){
+                                            if (pathList.size() == successCount) {
                                                 //완료
-                                                WriteInfo writeInfo = new WriteInfo(title, contentsList, user.getUid(), new Date());
-                                                storeUpload(documentReference, writeInfo);
-                                                for(int a = 0; a < contentsList.size(); a++){
-                                                    Log.e("로그: ","콘덴츠: "+contentsList.get(a));
+                                                PostInfo postInfo = new PostInfo(title, contentsList, user.getUid(), new Date());
+                                                storeUpload(documentReference, postInfo);
+                                                for (int a = 0; a < contentsList.size(); a++) {
+                                                    Log.e("로그: ", "콘덴츠: " + contentsList.get(a));
                                                 }
                                             }
                                         }
@@ -229,17 +232,22 @@ public class WritePostActivity extends BasicActivity{
                     }
                 }
             }
+            if (pathList.size() == 0) {
+                PostInfo postInfo = new PostInfo(title, contentsList, user.getUid(), new Date());
+                storeUpload(documentReference, postInfo);
+            }
         } else {
             startToast("제목을 입력해주세요.");
         }
     }
 
-    private void storeUpload(DocumentReference documentReference, WriteInfo writeInfo){
-        documentReference.set(writeInfo)
+    private void storeUpload(DocumentReference documentReference, PostInfo postInfo) {
+        documentReference.set(postInfo)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "DocumentSnapshot successfully written!");
+                        loaderLayout.setVisibility(View.GONE);
                         finish();
                     }
                 })
@@ -247,6 +255,7 @@ public class WritePostActivity extends BasicActivity{
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error writing document", e);
+                        loaderLayout.setVisibility(View.GONE);
                     }
                 });
     }

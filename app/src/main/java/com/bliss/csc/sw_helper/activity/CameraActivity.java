@@ -42,7 +42,7 @@ public class CameraActivity extends BasicActivity {
         @Override
         public void onImageAvailable(ImageReader reader) {
             //mBackgroundHandler.post(new Camera2BasicFragment.ImageUpLoader(reader.acquireNextImage()));
-            Log.e("로그: ","캡처");
+            Log.e("로그: ", "캡처");
 
             Image mImage = reader.acquireNextImage();
             File mFile = new File(getExternalFilesDir(null), "profileImage.jpg");
@@ -88,5 +88,4 @@ public class CameraActivity extends BasicActivity {
                     .commit();
         }
     }
-
 }

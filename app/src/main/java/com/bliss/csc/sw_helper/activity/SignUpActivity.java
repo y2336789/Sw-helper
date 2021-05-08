@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.bliss.csc.sw_helper.R;
@@ -40,32 +41,35 @@ public class SignUpActivity extends BasicActivity {
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.btn_signup:
                     signUp();
-                break;
+                    break;
             }
         }
     };
 
-    private void signUp(){
+    private void signUp() {
         String email = ((EditText) findViewById(R.id.et_email)).getText().toString();
         String password = ((EditText) findViewById(R.id.et_password)).getText().toString();
         String passwordCheck = ((EditText) findViewById(R.id.et_passwordcheck)).getText().toString();
 
-        if(email.length() > 0 && password.length() > 0 && passwordCheck.length() > 0) {
-            if(password.equals(passwordCheck)) {
+        if (email.length() > 0 && password.length() > 0 && passwordCheck.length() > 0) {
+            if (password.equals(passwordCheck)) {
+                final RelativeLayout loaderLayout = findViewById(R.id.loaderlayout);
+                loaderLayout.setVisibility(View.VISIBLE);
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
+                                loaderLayout.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     startTost("회원가입 완료");
                                     mystartActivity(MainActivity.class);
                                     // 성공했을때 UI
                                 } else {
-                                    if(task.getException() != null) {
+                                    if (task.getException() != null) {
                                         startTost(task.getException().toString());
                                     }
                                 }
@@ -80,7 +84,7 @@ public class SignUpActivity extends BasicActivity {
 
     }
 
-    private void startTost(String msg){
+    private void startTost(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 

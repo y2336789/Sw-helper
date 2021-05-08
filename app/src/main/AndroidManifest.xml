@@ -51,6 +51,8 @@
         </activity>
         <activity android:name=".activity.VideoGalleryActivity">
         </activity>
+        <activity android:name=".activity.BoardActivity">
+        </activity>
 
 
 

@@ -21,6 +21,14 @@
             android:layout_marginBottom="10dp"
             android:clickable="true"
             app:srcCompat="@android:drawable/ic_menu_edit" />
+
+        <Button
+            android:id="@+id/btn_go_board"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="게시판 가기">
+
+        </Button>
     </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

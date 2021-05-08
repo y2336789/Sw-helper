@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -38,6 +39,7 @@ import java.io.InputStream;
 public class MemberInitActivity extends BasicActivity {
     private static final String TAG = "MemberInitActivity";
     private ImageView profileImageView;
+    private RelativeLayout loaderLayout;
     private String profilePath;
     private FirebaseUser user;
 
@@ -46,6 +48,7 @@ public class MemberInitActivity extends BasicActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_init);
 
+        loaderLayout = findViewById(R.id.loaderlayout);
         profileImageView = findViewById(R.id.profileimageView);
         profileImageView.setOnClickListener(onClickListener);
 
@@ -63,7 +66,7 @@ public class MemberInitActivity extends BasicActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case 0 : {
+            case 0: {
                 if (resultCode == Activity.RESULT_OK) {
                     profilePath = data.getStringExtra("profilePath");
                     Glide.with(this).load(profilePath).centerCrop().override(500)
@@ -79,26 +82,12 @@ public class MemberInitActivity extends BasicActivity {
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.btn_check:
-                    profileUpdate();
+                    storageUploader();
                     break;
                 case R.id.profileimageView:
-                    if (ContextCompat.checkSelfPermission(MemberInitActivity.this,
-                            Manifest.permission.READ_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(MemberInitActivity.this,
-                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                1);
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(MemberInitActivity.this,
-                                Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-                        } else {
-                            startToast("권한을 허용해 주세요");
-                        }
-                    }else{
-                        mystartActivity(GalleryActivity.class);
-                    }
+                    mystartActivity(GalleryActivity.class);
                     break;
                 case R.id.picture_btn:
                     mystartActivity(CameraActivity.class);
@@ -107,27 +96,14 @@ public class MemberInitActivity extends BasicActivity {
         }
     };
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                if (grantResults.length > 0  && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mystartActivity(GalleryActivity.class);
-                } else {
-                    startToast("권한을 허용해 주세요");
-                }
-            }
-        }
-    }
-
-
-    private void profileUpdate() {
+    private void storageUploader() {
         final String name = ((EditText) findViewById(R.id.et_name)).getText().toString();
         final String hakbun = ((EditText) findViewById(R.id.et_hakbun)).getText().toString();
         final String phoneNumber = ((EditText) findViewById(R.id.et_phonenumber)).getText().toString();
         final String birthday = ((EditText) findViewById(R.id.et_birthday)).getText().toString();
 
         if (name.length() > 0 && phoneNumber.length() > 9 && birthday.length() > 5 && hakbun.length() > 9) {
+            loaderLayout.setVisibility(View.VISIBLE);
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             user = FirebaseAuth.getInstance().getCurrentUser();
@@ -135,7 +111,7 @@ public class MemberInitActivity extends BasicActivity {
 
             if (profilePath == null) {
                 MemberInfo memberInfo = new MemberInfo(name, hakbun, phoneNumber, birthday);
-                uploader(memberInfo);
+                storeUploader(memberInfo);
             } else {
                 try {
                     InputStream stream = new FileInputStream(new File(profilePath));
@@ -155,7 +131,7 @@ public class MemberInitActivity extends BasicActivity {
                                 Uri downloadUri = task.getResult();
 
                                 MemberInfo memberInfo = new MemberInfo(name, hakbun, phoneNumber, birthday, downloadUri.toString());
-                                uploader(memberInfo);
+                                storeUploader(memberInfo);
                             } else {
                                 startToast("회원정보를 보내는데 실패하였습니다.");
                             }
@@ -165,18 +141,19 @@ public class MemberInitActivity extends BasicActivity {
                     Log.e("로그", "에러: " + e.toString());
                 }
             }
-        } else{
+        } else {
             startToast("회원정보를 입력해주세요.");
         }
     }
 
-    private void uploader(MemberInfo memberInfo) {
+    private void storeUploader(MemberInfo memberInfo) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(user.getUid()).set(memberInfo)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         startToast("회원정보 등록 성공하였습니다");
+                        loaderLayout.setVisibility(View.GONE);
                         finish();
                     }
                 })
@@ -184,6 +161,7 @@ public class MemberInitActivity extends BasicActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         startToast("회원정보를 입력해주세요");
+                        loaderLayout.setVisibility(View.GONE);
                     }
                 });
     }

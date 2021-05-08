@@ -7,7 +7,7 @@ public class MemberInfo {
     private String birthday;
     private String photoUrl;
 
-    public MemberInfo(String name, String hakbun, String PhoneNumber, String birthday, String photoUrl){
+    public MemberInfo(String name, String hakbun, String PhoneNumber, String birthday, String photoUrl) {
         this.name = name;
         this.hakbun = hakbun;
         this.PhoneNumber = PhoneNumber;
@@ -15,45 +15,50 @@ public class MemberInfo {
         this.photoUrl = photoUrl;
     }
 
-    public MemberInfo(String name, String hakbun, String PhoneNumber, String birthday){
+    public MemberInfo(String name, String hakbun, String PhoneNumber, String birthday) {
         this.name = name;
         this.hakbun = hakbun;
         this.PhoneNumber = PhoneNumber;
         this.birthday = birthday;
     }
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
-    public void setName(String name){
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getHakbun(){
+    public String getHakbun() {
         return this.hakbun;
     }
-    public void setHakbun(String hakbun){
+
+    public void setHakbun(String hakbun) {
         this.hakbun = hakbun;
     }
 
-    public String getPhoneNumber(){
+    public String getPhoneNumber() {
         return this.PhoneNumber;
     }
-    public void setPhoneNumber(String phoneNumber){
+
+    public void setPhoneNumber(String phoneNumber) {
         this.PhoneNumber = phoneNumber;
     }
 
-    public String getBirthday(){
+    public String getBirthday() {
         return this.birthday;
     }
-    public void setBirthday(String birthday){
+
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
-    public String getPhotoUrl(){
+    public String getPhotoUrl() {
         return this.photoUrl;
     }
-    public void setPhotoUrl(String photoUrl){
+
+    public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
 

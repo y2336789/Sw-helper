@@ -38,8 +38,8 @@ public class VideoGalleryActivity extends BasicActivity {
         String PathOfImage = null;
         uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
 
-        String[] projection = { MediaStore.MediaColumns.DATA,
-                MediaStore.Video.Media.BUCKET_DISPLAY_NAME };
+        String[] projection = {MediaStore.MediaColumns.DATA,
+                MediaStore.Video.Media.BUCKET_DISPLAY_NAME};
 
         cursor = activity.getContentResolver().query(uri, projection, null,
                 null, null);

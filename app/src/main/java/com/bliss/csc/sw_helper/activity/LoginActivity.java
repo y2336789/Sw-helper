@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -46,10 +47,10 @@ public class LoginActivity extends BasicActivity {
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.btn_check:
                     Login();
-                break;
+                    break;
                 case R.id.btn_signup:
                     startSignUpActivity();
                     break;
@@ -60,21 +61,24 @@ public class LoginActivity extends BasicActivity {
         }
     };
 
-    private void Login(){
+    private void Login() {
         String email = ((EditText) findViewById(R.id.et_email)).getText().toString();
         String password = ((EditText) findViewById(R.id.et_password)).getText().toString();
 
-        if(email.length() > 0 && password.length() > 0) {
+        if (email.length() > 0 && password.length() > 0) {
+            final RelativeLayout loaderLayout = findViewById(R.id.loaderlayout);
+            loaderLayout.setVisibility(View.VISIBLE);
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+                            loaderLayout.setVisibility(View.GONE);
                             if (task.isSuccessful()) {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 startTost("로그인 성공");
                                 mystartActivity(MainActivity.class);
                             } else {
-                                if(task.getException() != null) {
+                                if (task.getException() != null) {
                                     startTost(task.getException().toString());
                                 }
                             }
@@ -89,16 +93,18 @@ public class LoginActivity extends BasicActivity {
     private void startTost(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
+
     private void startSignUpActivity() {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
+
     private void mystartActivity(Class c) {
         Intent intent = new Intent(this, c);
         startActivity(intent);
     }
 
-    public void onBackPressed(){
+    public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("종료 확인");
         builder.setMessage("앱을 종료하시겠습니까?");

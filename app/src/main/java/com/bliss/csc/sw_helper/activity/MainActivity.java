@@ -33,10 +33,10 @@ public class MainActivity extends BasicActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        drawerView = (View)findViewById(R.id.drawer);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerView = (View) findViewById(R.id.drawer);
 
-        Button btn_close = (Button)findViewById(R.id.btn_close);
+        Button btn_close = (Button) findViewById(R.id.btn_close);
         btn_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,9 +55,9 @@ public class MainActivity extends BasicActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user == null) {
+        if (user == null) {
             mystartActivity(LoginActivity.class);
-        }else {
+        } else {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             DocumentReference docRef = db.collection("users").document(user.getUid());
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -65,7 +65,7 @@ public class MainActivity extends BasicActivity {
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
-                        if(document != null){
+                        if (document != null) {
                             if (document.exists()) {
                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                             } else {
@@ -80,7 +80,7 @@ public class MainActivity extends BasicActivity {
             });
         }
 
-
+        findViewById(R.id.btn_go_board).setOnClickListener(onClickListener);
         findViewById(R.id.btn_logout).setOnClickListener(onClickListener);
         findViewById(R.id.floatingActionButton).setOnClickListener(onClickListener);
     }
@@ -88,13 +88,16 @@ public class MainActivity extends BasicActivity {
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.btn_logout:
                     FirebaseAuth.getInstance().signOut();
                     mystartActivity(LoginActivity.class);
                     break;
                 case R.id.floatingActionButton:
                     mystartActivity(WritePostActivity.class);
+                    break;
+                case R.id.btn_go_board:
+                    mystartActivity(BoardActivity.class);
                     break;
             }
         }
