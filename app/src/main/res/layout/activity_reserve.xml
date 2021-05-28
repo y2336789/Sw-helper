@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/main_topLinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/logo">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="#ffd400"
+            android:gravity="center"
+            android:text="스터디룸 예약"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/board_free"
+        android:layout_width="273dp"
+        android:layout_height="307dp"
+        android:layout_marginTop="4dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.07"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_topLinear">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="260dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="88dp"
+            android:background="#AA2162"
+            android:gravity="center_horizontal"
+            android:text="Study Room1"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="36sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.135"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_topLinear" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="260dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="60dp"
+            android:background="#AA2162"
+            android:gravity="center_horizontal"
+            android:text="Study Room2"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="36sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.139"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="124dp"
+        android:layout_height="304dp"
+        android:layout_marginStart="271dp"
+        android:layout_marginLeft="271dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/board_free"
+        app:layout_constraintTop_toBottomOf="@+id/main_topLinear">
+
+        <Button
+            android:id="@+id/bookButton1"
+            android:layout_width="107dp"
+            android:layout_height="61dp"
+            android:layout_marginTop="88dp"
+            android:text="예약"
+            android:textSize="30sp"
+            app:backgroundTint="#D66A8F"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.304"
+            app:layout_constraintStart_toEndOf="@+id/textView6"
+            app:layout_constraintTop_toBottomOf="@+id/main_topLinear"
+            />
+
+        <Button
+            android:id="@+id/bookButton2"
+            android:layout_width="107dp"
+            android:layout_height="61dp"
+            android:layout_marginTop="60dp"
+            android:text="예약"
+            android:textSize="30sp"
+            app:backgroundTint="#D66A8F"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.304"
+            app:layout_constraintStart_toEndOf="@+id/textView7"
+            app:layout_constraintTop_toBottomOf="@+id/button3"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="403dp"
+        android:layout_height="186dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="32dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/board_free">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="135dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"
+            android:gravity="center"
+            android:text="Study Room은 모든 학생들을 위한 공간입니다.\n다음 팀을 위해서 깨끗이 사용해주세요."
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textSize="18sp"
+            android:textStyle="bold|italic" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

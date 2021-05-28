@@ -75,12 +75,14 @@
 
             <Button
                 android:id="@+id/btn_check"
+                android:backgroundTint="#AA2161"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="확인" />
 
             <Button
                 android:id="@+id/picture_btn"
+                android:backgroundTint="#AA2161"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="사진촬영" />

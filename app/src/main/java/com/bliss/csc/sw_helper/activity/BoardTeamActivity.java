@@ -3,6 +3,8 @@ package com.bliss.csc.sw_helper.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bliss.csc.sw_helper.PostInfo;
 import com.bliss.csc.sw_helper.R;
-import com.bliss.csc.sw_helper.adapter.BoardAdapter;
+import com.bliss.csc.sw_helper.adapter.BoardFreeAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,13 +24,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.core.OrderBy;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
-public class BoardActivity extends BasicActivity {
+public class BoardTeamActivity extends BasicActivity {
     private static final String TAG = "MemberInitActivity";
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
@@ -37,7 +37,9 @@ public class BoardActivity extends BasicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_board);
+        setContentView(R.layout.activity_team);
+
+        findViewById(R.id.floatingActionButton).setOnClickListener(onClickListener);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -62,16 +64,30 @@ public class BoardActivity extends BasicActivity {
             }
         });
 
-        recyclerView = findViewById(R.id.recyclerView_b);
+        recyclerView = findViewById(R.id.recyclerView_team);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(BoardActivity.this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(BoardTeamActivity.this));
+
+
     }
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.floatingActionButton:
+                    mystartActivity(WriteTeamActivity.class);
+                    break;
+            }
+        }
+    };
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        CollectionReference collectionReference = firebaseFirestore.collection("posts");
+        CollectionReference collectionReference;
+        collectionReference = firebaseFirestore.collection("team");
         collectionReference.orderBy("createdAt", Query.Direction.DESCENDING).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -88,14 +104,13 @@ public class BoardActivity extends BasicActivity {
                                         document.getId().toString()));
                             }
 
-                            RecyclerView.Adapter mAdapter = new BoardAdapter(BoardActivity.this, postList);
+                            RecyclerView.Adapter mAdapter = new BoardFreeAdapter(BoardTeamActivity.this, postList);
                             recyclerView.setAdapter(mAdapter);
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
-
     }
 
     private void mystartActivity(Class c) {
@@ -105,5 +120,4 @@ public class BoardActivity extends BasicActivity {
 
 
 }
-
 

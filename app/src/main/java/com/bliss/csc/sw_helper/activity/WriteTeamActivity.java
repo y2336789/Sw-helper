@@ -13,9 +13,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
-import com.bliss.csc.sw_helper.R;
+
 import com.bliss.csc.sw_helper.PostInfo;
+import com.bliss.csc.sw_helper.R;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,6 +29,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,7 +37,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class WritePostActivity extends BasicActivity {
+public class WriteTeamActivity extends BasicActivity {
     private static final String TAG = "WritePostActivity";
     private FirebaseUser user;
     private ArrayList<String> pathList = new ArrayList<>();
@@ -45,6 +48,7 @@ public class WritePostActivity extends BasicActivity {
     private int pathCount, successCount;
     private RelativeLayout loaderLayout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +57,7 @@ public class WritePostActivity extends BasicActivity {
         parent = findViewById(R.id.contentsLayout);
         buttonsBackgroundLayout = findViewById(R.id.buttonsBackgroundLayout);
         loaderLayout = findViewById(R.id.loaderlayout);
+
 
         buttonsBackgroundLayout.setOnClickListener(onClickListener);
         findViewById(R.id.check).setOnClickListener(onClickListener);
@@ -83,13 +88,14 @@ public class WritePostActivity extends BasicActivity {
 
                     ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-                    LinearLayout linearLayout = new LinearLayout(WritePostActivity.this);
+                    LinearLayout linearLayout = new LinearLayout(WriteTeamActivity.this);
                     linearLayout.setLayoutParams(layoutParams);
                     linearLayout.setOrientation(LinearLayout.VERTICAL);
 
                     if (selectedEditText == null) {
                         parent.addView(linearLayout);
-                    } else {
+                    }
+                    else {
                         for (int i = 0; i < parent.getChildCount(); i++) {
                             if (parent.getChildAt(i) == selectedEditText.getParent()) {
                                 parent.addView(linearLayout, i + 1);
@@ -98,7 +104,7 @@ public class WritePostActivity extends BasicActivity {
                         }
                     }
 
-                    ImageView imageView = new ImageView(WritePostActivity.this);
+                    ImageView imageView = new ImageView(WriteTeamActivity.this);
                     imageView.setLayoutParams(layoutParams);
                     imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -110,7 +116,7 @@ public class WritePostActivity extends BasicActivity {
                     Glide.with(this).load(profilePath).override(1000).into(imageView);
                     linearLayout.addView(imageView);
 
-                    EditText editText = new EditText(WritePostActivity.this);
+                    EditText editText = new EditText(WriteTeamActivity.this);
                     editText.setLayoutParams(layoutParams);
                     editText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
                     editText.setHint("내용");
@@ -173,70 +179,69 @@ public class WritePostActivity extends BasicActivity {
     private void storageUpload() {
         final String title = ((EditText) findViewById(R.id.title_editText)).getText().toString();
 
-        if (title.length() > 0) {
-            loaderLayout.setVisibility(View.VISIBLE);
-            final ArrayList<String> contentsList = new ArrayList<>();
-            user = FirebaseAuth.getInstance().getCurrentUser();
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference();
-            FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-            final DocumentReference documentReference = firebaseFirestore.collection("posts").document();
+        loaderLayout.setVisibility(View.VISIBLE);
+        final ArrayList<String> contentsList = new ArrayList<>();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        final DocumentReference documentReference = firebaseFirestore.collection("team").document();
 
-            for (int i = 0; i < parent.getChildCount(); i++) {
-                LinearLayout linearLayout = (LinearLayout) parent.getChildAt(i);
-                for (int ii = 0; ii < linearLayout.getChildCount(); ii++) {
-                    View view = linearLayout.getChildAt(ii);
-                    if (view instanceof EditText) {
-                        String text = ((EditText) view).getText().toString();
-                        if (text.length() > 0) {
-                            contentsList.add(text);
-                        }
-                    } else {
-                        contentsList.add(pathList.get(pathCount));
-                        String[] pathArray = pathList.get(pathCount).split("\\.");
-                        final StorageReference mountainImagesRef = storageRef.child("posts/" + documentReference.getId() + "/" + pathCount + "." + pathArray[pathArray.length - 1]);
-                        try {
-                            InputStream stream = new FileInputStream(new File(pathList.get(pathCount)));
-                            StorageMetadata metadata = new StorageMetadata.Builder().setCustomMetadata("index", "" + (contentsList.size() - 1)).build();
-                            UploadTask uploadTask = mountainImagesRef.putStream(stream, metadata);
-                            uploadTask.addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    // Handle unsuccessful uploads
-                                }
-                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    final int index = Integer.parseInt(taskSnapshot.getMetadata().getCustomMetadata("index"));
-                                    mountainImagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            contentsList.set(index, uri.toString());
-                                            successCount++;
-                                            if (pathList.size() == successCount) {
-                                                //완료
-                                                PostInfo postInfo = new PostInfo(title, contentsList, user.getUid(), new Date());
-                                                storeUpload(documentReference, postInfo);
-                                                for (int a = 0; a < contentsList.size(); a++) {
-                                                    Log.e("로그: ", "콘덴츠: " + contentsList.get(a));
-                                                }
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            LinearLayout linearLayout = (LinearLayout) parent.getChildAt(i);
+            for (int ii = 0; ii < linearLayout.getChildCount(); ii++) {
+                View view = linearLayout.getChildAt(ii);
+                if (view instanceof EditText) {
+                    String text = ((EditText) view).getText().toString();
+                    if (text.length() > 0) {
+                        contentsList.add(text);
+                    }
+                } else {
+                    contentsList.add(pathList.get(pathCount));
+                    String[] pathArray = pathList.get(pathCount).split("\\.");
+                    final StorageReference mountainImagesRef = storageRef.child("team/" + documentReference.getId() + "/" + pathCount + "." + pathArray[pathArray.length - 1]);
+                    try {
+                        InputStream stream = new FileInputStream(new File(pathList.get(pathCount)));
+                        StorageMetadata metadata = new StorageMetadata.Builder().setCustomMetadata("index", "" + (contentsList.size() - 1)).build();
+                        UploadTask uploadTask = mountainImagesRef.putStream(stream, metadata);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                final int index = Integer.parseInt(taskSnapshot.getMetadata().getCustomMetadata("index"));
+                                mountainImagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        contentsList.set(index, uri.toString());
+                                        successCount++;
+                                        if (pathList.size() == successCount) {
+                                            //완료
+                                            PostInfo postInfo = new PostInfo(title, contentsList, user.getUid(), new Date());
+                                            storeUpload(documentReference, postInfo);
+                                            for (int a = 0; a < contentsList.size(); a++) {
+                                                Log.e("로그: ", "콘덴츠: " + contentsList.get(a));
                                             }
                                         }
-                                    });
-                                }
-                            });
-                        } catch (FileNotFoundException e) {
-                            Log.e("로그", "에러: " + e.toString());
-                        }
-                        pathCount++;
+                                    }
+                                });
+                            }
+                        });
+                    } catch (FileNotFoundException e) {
+                        Log.e("로그", "에러: " + e.toString());
                     }
+                    pathCount++;
                 }
             }
-            if (pathList.size() == 0) {
-                PostInfo postInfo = new PostInfo(title, contentsList, user.getUid(), new Date());
-                storeUpload(documentReference, postInfo);
-            }
-        } else {
+        }
+        if (pathList.size() == 0) {
+            PostInfo postInfo = new PostInfo(title, contentsList, user.getUid(), new Date());
+            storeUpload(documentReference, postInfo);
+        }
+        else {
             startToast("제목을 입력해주세요.");
         }
     }

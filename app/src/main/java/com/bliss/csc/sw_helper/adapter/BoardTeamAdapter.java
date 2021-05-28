@@ -1,7 +1,7 @@
 package com.bliss.csc.sw_helper.adapter;
 
 import android.app.Activity;
-import android.util.Log;
+import android.content.Intent;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -17,9 +17,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bliss.csc.sw_helper.PostInfo;
 import com.bliss.csc.sw_helper.R;
-import com.bliss.csc.sw_helper.activity.BoardActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,10 +29,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHolder> {
+public class BoardTeamAdapter extends RecyclerView.Adapter<BoardFreeAdapter.BoardViewHolder> {
     private ArrayList<PostInfo> mDataset;
     private Activity activity;
     private FirebaseFirestore firebaseFirestore;
+    private Intent intent;
+    private String dbBoard;
 
 
     static class BoardViewHolder extends RecyclerView.ViewHolder {
@@ -65,7 +67,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
         }
     }
 
-    public BoardAdapter(Activity activity, ArrayList<PostInfo> myDataset) {
+    public BoardTeamAdapter(Activity activity, ArrayList<PostInfo> myDataset) {
         mDataset = myDataset;
         this.activity = activity;
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -78,9 +80,9 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
 
     @NonNull
     @Override
-    public BoardAdapter.BoardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BoardFreeAdapter.BoardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
-        final BoardViewHolder boardViewHolder = new BoardViewHolder(activity, cardView, mDataset.get(viewType));
+        final BoardFreeAdapter.BoardViewHolder boardViewHolder = new BoardFreeAdapter.BoardViewHolder(activity, cardView, mDataset.get(viewType));
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,7 +101,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final BoardViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final BoardFreeAdapter.BoardViewHolder holder, int position) {
         CardView cardView = holder.cardView;
         TextView titleTextView = cardView.findViewById(R.id.titleTextView);
         titleTextView.setText(mDataset.get(position).getTitle());
@@ -126,6 +128,8 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
     }
 
     public void showPopup(View v, int position) {
+
+
         PopupMenu popup = new PopupMenu(activity, v);
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -135,7 +139,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
 
                         return true;
                     case R.id.delete:
-                        firebaseFirestore.collection("posts").document(mDataset.get(position).getId())
+                        firebaseFirestore.collection("team").document(mDataset.get(position).getId())
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override

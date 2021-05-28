@@ -4,15 +4,22 @@
     android:layout_width="240dp"
     android:layout_height="match_parent"
     android:layout_gravity="start"
-    android:background="#a8a7ff"
+    android:background="#E6A6C4"
     android:orientation="vertical">
 
+    <ImageView
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_person_24"
+        android:layout_gravity="center"/>
     <Button
         android:id="@+id/btn_close"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:onClick="btn_logout"
+        android:backgroundTint="#AA2161"
         android:text="메뉴닫기" />
 
     <Button
@@ -20,28 +27,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:backgroundTint="#AA2161"
         android:text="로그아웃" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="로그아웃" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="#223ffc"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="테스트메뉴" />
-
-
-    </LinearLayout>
 
 </LinearLayout>

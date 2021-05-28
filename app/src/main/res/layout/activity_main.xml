@@ -1,41 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/drawer_layout"
-    tools:context=".activity.MainActivity">
-
-    <RelativeLayout
+    <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/drawer_layout"
+        tools:context=".activity.MainActivity">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:clickable="true"
-            app:srcCompat="@android:drawable/ic_menu_edit" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btn_go_board"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="게시판 가기">
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/logo">
+            </ImageView>
 
-        </Button>
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/our_logo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="소웨 도우미"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:textSize="50sp"
+                android:gravity="center_horizontal"
+                android:layout_below="@id/logo">
+            </TextView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            <Button
+                android:layout_marginTop="50dp"
+                android:id="@+id/notice_btn"
+                android:layout_width="300dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:backgroundTint="#AA2161"
+                android:text="학과 공지사항"
+                android:layout_below="@+id/our_logo"
+                android:layout_centerHorizontal="true"
+                android:textSize="25sp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <include layout="@layout/activity_drawer" />
+            <Button
+                android:id="@+id/board_btn"
+                android:layout_marginTop="20dp"
+                android:layout_width="300dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:backgroundTint="#AA2161"
+                android:layout_below="@+id/notice_btn"
+                android:layout_centerHorizontal="true"
+                android:text="게시판"
+                android:textSize="25sp" />
 
-</androidx.drawerlayout.widget.DrawerLayout>
+            <Button
+                android:id="@+id/reserve_btn"
+                android:layout_marginTop="20dp"
+                android:layout_width="300dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:backgroundTint="#AA2161"
+                android:text="스터디룸 예약"
+                android:layout_below="@+id/board_btn"
+                android:layout_centerHorizontal="true"
+                android:textSize="25sp" />
+
+            <Button
+                android:id="@+id/call_btn"
+                android:layout_marginTop="20dp"
+                android:layout_width="300dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:backgroundTint="#AA2161"
+                android:text="학과 사무실 전화"
+                android:layout_below="@+id/reserve_btn"
+                android:layout_centerHorizontal="true"
+                android:textSize="25sp" />
+
+
+        </RelativeLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <include layout="@layout/activity_drawer" />
+
+    </androidx.drawerlayout.widget.DrawerLayout>

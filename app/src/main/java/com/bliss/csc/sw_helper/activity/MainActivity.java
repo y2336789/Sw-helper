@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -12,6 +13,8 @@ import android.widget.Button;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.bliss.csc.sw_helper.NoticeActivity;
 import com.bliss.csc.sw_helper.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -80,9 +83,11 @@ public class MainActivity extends BasicActivity {
             });
         }
 
-        findViewById(R.id.btn_go_board).setOnClickListener(onClickListener);
+        findViewById(R.id.board_btn).setOnClickListener(onClickListener);
         findViewById(R.id.btn_logout).setOnClickListener(onClickListener);
-        findViewById(R.id.floatingActionButton).setOnClickListener(onClickListener);
+        findViewById(R.id.notice_btn).setOnClickListener(onClickListener);
+        findViewById(R.id.reserve_btn).setOnClickListener(onClickListener);
+        findViewById(R.id.call_btn).setOnClickListener(onClickListener);
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -93,11 +98,18 @@ public class MainActivity extends BasicActivity {
                     FirebaseAuth.getInstance().signOut();
                     mystartActivity(LoginActivity.class);
                     break;
-                case R.id.floatingActionButton:
-                    mystartActivity(WritePostActivity.class);
+                case R.id.board_btn:
+                    mystartActivity(BoardListActivity.class);
                     break;
-                case R.id.btn_go_board:
-                    mystartActivity(BoardActivity.class);
+                case  R.id.reserve_btn:
+                    mystartActivity(ReserveActivity.class);
+                    break;
+                case R.id.call_btn:
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:0432612260"));
+                    startActivity(intent);
+                    break;
+                case R.id.notice_btn:
+                    mystartActivity(NoticeActivity.class);
                     break;
             }
         }
