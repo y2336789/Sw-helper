@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/logo_container"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="120dp"
         android:backgroundTint="#AA2161">
 
         <ImageView
@@ -18,75 +18,64 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/logo">
+            android:src="@drawable/board_logo">
         </ImageView>
     </LinearLayout>
 
 
     <LinearLayout
-        android:id="@+id/free_board"
         android:layout_marginTop="50dp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_gravity="center"
-        android:background="@drawable/border">
+        android:layout_width="370dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center">
 
-        <TextView
-            android:textAlignment="center"
+        <ImageButton
+            android:id="@+id/free_board"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:textSize="30sp"
-            android:text="자유 게시판"
-            android:gravity="center_vertical"
-            tools:ignore="RtlCompat">
-        </TextView>
+            android:layout_height="match_parent"
+            android:background="@drawable/to_free">
+
+        </ImageButton>
+
 
     </LinearLayout>
 
 
     <LinearLayout
-        android:id="@+id/team_board"
         android:layout_marginTop="50dp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_gravity="center"
-        android:background="@drawable/border">
+        android:layout_height="120dp"
+        android:layout_gravity="center">
 
-        <TextView
-            android:textAlignment="center"
+        <ImageButton
+            android:id="@+id/team_board"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:textSize="30sp"
-            android:text="팀프로젝트 매칭 게시판"
-            android:gravity="center_vertical"
-            tools:ignore="RtlCompat">
-        </TextView>
+            android:layout_height="match_parent"
+            android:background="@drawable/to_team">
+
+        </ImageButton>
     </LinearLayout>
 
 
     <LinearLayout
-        android:id="@+id/room_board"
         android:layout_marginTop="50dp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_gravity="center"
-        android:background="@drawable/border">
+        android:layout_width="370dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center">
 
-        <TextView
-            android:textAlignment="center"
+        <ImageButton
+            android:id="@+id/room_board"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:textSize="30sp"
-            android:text="룸메이트 매칭 게시판"
-            android:gravity="center_vertical"
-            tools:ignore="RtlCompat">
-        </TextView>
+            android:layout_height="match_parent"
+            android:background="@drawable/to_room">
+
+        </ImageButton>
     </LinearLayout>
 
 

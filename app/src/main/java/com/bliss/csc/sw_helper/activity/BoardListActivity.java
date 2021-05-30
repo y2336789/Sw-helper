@@ -2,6 +2,7 @@ package com.bliss.csc.sw_helper.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
@@ -11,7 +12,7 @@ import com.bliss.csc.sw_helper.R;
 
 public class BoardListActivity extends AppCompatActivity {
 
-    LinearLayout free, team,room;
+    ImageButton free, team,room;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
