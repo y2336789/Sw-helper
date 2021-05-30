@@ -45,6 +45,7 @@ public class BoardFreeActivity extends BasicActivity {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         DocumentReference documentReference = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -67,10 +68,12 @@ public class BoardFreeActivity extends BasicActivity {
         recyclerView = findViewById(R.id.recyclerView_free);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(BoardFreeActivity.this));
-
-
     }
+
+
+
     View.OnClickListener onClickListener = new View.OnClickListener() {
+
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -80,6 +83,8 @@ public class BoardFreeActivity extends BasicActivity {
             }
         }
     };
+
+
 
 
     @Override
@@ -106,7 +111,8 @@ public class BoardFreeActivity extends BasicActivity {
 
                             RecyclerView.Adapter mAdapter = new BoardFreeAdapter(BoardFreeActivity.this, postList);
                             recyclerView.setAdapter(mAdapter);
-                        } else {
+                        }
+                        else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }

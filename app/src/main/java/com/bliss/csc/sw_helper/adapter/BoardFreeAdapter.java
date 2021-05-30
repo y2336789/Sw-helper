@@ -2,6 +2,7 @@ package com.bliss.csc.sw_helper.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -85,6 +86,7 @@ public class BoardFreeAdapter extends RecyclerView.Adapter<BoardFreeAdapter.Boar
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
             }
         });
