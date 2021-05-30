@@ -2,7 +2,6 @@ package com.bliss.csc.sw_helper.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -20,6 +19,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bliss.csc.sw_helper.PostInfo;
 import com.bliss.csc.sw_helper.R;
+import com.bliss.csc.sw_helper.listener.OnPostListener;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,37 +33,15 @@ public class BoardFreeAdapter extends RecyclerView.Adapter<BoardFreeAdapter.Boar
     private ArrayList<PostInfo> mDataset;
     private Activity activity;
     private FirebaseFirestore firebaseFirestore;
-    private Intent intent;
-    private String dbBoard;
+    private OnPostListener onPostListener;
 
 
     static class BoardViewHolder extends RecyclerView.ViewHolder {
         public CardView cardView;
 
-        public BoardViewHolder(Activity activity, CardView v, PostInfo postInfo) {
+        public BoardViewHolder(CardView v) {
             super(v);
             cardView = v;
-
-            LinearLayout contentsLayout = cardView.findViewById(R.id.contentsLayout);
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            ArrayList<String> contentList = postInfo.getContents();
-
-            if (contentsLayout.getChildCount() == 0) {
-                for (int i = 0; i < contentList.size(); i++) {
-                    String contents = contentList.get(i);
-                    if (Patterns.WEB_URL.matcher(contents).matches()) {
-                        ImageView imageView = new ImageView(activity);
-                        imageView.setLayoutParams(layoutParams);
-                        imageView.setAdjustViewBounds(true);
-                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                        contentsLayout.addView(imageView);
-                    } else {
-                        TextView textView = new TextView(activity);
-                        textView.setLayoutParams(layoutParams);
-                        contentsLayout.addView(textView);
-                    }
-                }
-            }
         }
     }
 
@@ -71,6 +49,10 @@ public class BoardFreeAdapter extends RecyclerView.Adapter<BoardFreeAdapter.Boar
         mDataset = myDataset;
         this.activity = activity;
         firebaseFirestore = FirebaseFirestore.getInstance();
+    }
+
+    public void setOnPostListener(OnPostListener onPostListener) {
+        this.onPostListener = onPostListener;
     }
 
     @Override
@@ -82,11 +64,10 @@ public class BoardFreeAdapter extends RecyclerView.Adapter<BoardFreeAdapter.Boar
     @Override
     public BoardFreeAdapter.BoardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
-        final BoardViewHolder boardViewHolder = new BoardViewHolder(activity, cardView, mDataset.get(viewType));
+        final BoardViewHolder boardViewHolder = new BoardViewHolder(cardView);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
             }
         });
@@ -111,14 +92,26 @@ public class BoardFreeAdapter extends RecyclerView.Adapter<BoardFreeAdapter.Boar
         createdAtTextView.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(mDataset.get(position).getCreatedAt()));
 
         LinearLayout contentsLayout = cardView.findViewById(R.id.contentsLayout);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ArrayList<String> contentList = mDataset.get(position).getContents();
 
-        for (int i = 0; i < contentList.size(); i++) {
-            String contents = contentList.get(i);
-            if (Patterns.WEB_URL.matcher(contents).matches()) {
-                Glide.with(activity).load(contents).override(1000).thumbnail(0.1f).into((ImageView) contentsLayout.getChildAt(i));
-            } else {
-                ((TextView) contentsLayout.getChildAt(i)).setText(contents);
+        contentsLayout.removeAllViews();
+        if(contentList.size() > 0 ) {
+            for (int i = 0; i < contentList.size(); i++) {
+                String contents = contentList.get(i);
+                if (Patterns.WEB_URL.matcher(contents).matches()) {
+                    ImageView imageView = new ImageView(activity);
+                    imageView.setLayoutParams(layoutParams);
+                    imageView.setAdjustViewBounds(true);
+                    imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                    contentsLayout.addView(imageView);
+                    Glide.with(activity).load(contents).override(1000).thumbnail(0.1f).into(imageView);
+                } else {
+                    TextView textView = new TextView(activity);
+                    textView.setLayoutParams(layoutParams);
+                    textView.setText(contents);
+                    contentsLayout.addView(textView);
+                }
             }
         }
     }
@@ -129,32 +122,17 @@ public class BoardFreeAdapter extends RecyclerView.Adapter<BoardFreeAdapter.Boar
     }
 
     public void showPopup(View v, int position) {
-
-
         PopupMenu popup = new PopupMenu(activity, v);
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+                String id = mDataset.get(position).getId();
                 switch (menuItem.getItemId()) {
                     case R.id.modify:
-
+                        onPostListener.onModify(id);
                         return true;
                     case R.id.delete:
-                        firebaseFirestore.collection("free").document(mDataset.get(position).getId())
-                                .delete()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        startTost("게시글을 삭제하였습니다.");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        startTost("게시글 삭제에 실패했습니다.");
-                                    }
-                                });
-
+                        onPostListener.onDelete(id);
                         return true;
                     default:
                         return false;

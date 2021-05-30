@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,7 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bliss.csc.sw_helper.PostInfo;
 import com.bliss.csc.sw_helper.R;
 import com.bliss.csc.sw_helper.adapter.BoardFreeAdapter;
+import com.bliss.csc.sw_helper.adapter.BoardTeamAdapter;
+import com.bliss.csc.sw_helper.listener.OnPostListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,11 +38,13 @@ public class BoardTeamActivity extends BasicActivity {
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
     private RecyclerView recyclerView;
+    private BoardTeamAdapter boardTeamAdapter;
+    private ArrayList<PostInfo> postList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_team);
+        setContentView(R.layout.activity_free);
 
         findViewById(R.id.floatingActionButton).setOnClickListener(onClickListener);
 
@@ -64,10 +71,16 @@ public class BoardTeamActivity extends BasicActivity {
             }
         });
 
-        recyclerView = findViewById(R.id.recyclerView_team);
+        postList = new ArrayList<>();
+        boardTeamAdapter = new BoardTeamAdapter(BoardTeamActivity.this, postList);
+        boardTeamAdapter.setOnPostListener(onPostListener);
+
+        recyclerView = findViewById(R.id.recyclerView_free);
+        findViewById(R.id.floatingActionButton).setOnClickListener(onClickListener);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(BoardTeamActivity.this));
-
+        recyclerView.setAdapter(boardTeamAdapter);
 
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -85,15 +98,50 @@ public class BoardTeamActivity extends BasicActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        postsUpdate();
+    }
 
-        CollectionReference collectionReference;
-        collectionReference = firebaseFirestore.collection("team");
+    OnPostListener onPostListener = new OnPostListener() {
+        @Override
+        public void onDelete(String id) {
+            Log.e("로그", "삭제");
+            firebaseFirestore.collection("team").document(id)
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            startTost("게시글을 삭제하였습니다.");
+                            postsUpdate();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            startTost("게시글을 삭제에 실패하였습니다  .");
+                        }
+                    });
+        }
+
+        @Override
+        public void onModify(String id) {
+
+            Log.e("로그", "수정");
+        }
+    };
+
+    private void mystartActivity(Class c) {
+        Intent intent = new Intent(this, c);
+        startActivity(intent);
+    }
+
+    private void postsUpdate() {
+        CollectionReference collectionReference = firebaseFirestore.collection("team");
         collectionReference.orderBy("createdAt", Query.Direction.DESCENDING).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            final ArrayList<PostInfo> postList = new ArrayList<>();
+                            postList.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 postList.add(new PostInfo(
@@ -103,21 +151,19 @@ public class BoardTeamActivity extends BasicActivity {
                                         new Date(document.getDate("createdAt").getTime()),
                                         document.getId().toString()));
                             }
-
-                            RecyclerView.Adapter mAdapter = new BoardFreeAdapter(BoardTeamActivity.this, postList);
-                            recyclerView.setAdapter(mAdapter);
+                            boardTeamAdapter.notifyDataSetChanged();
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
+
+
     }
 
-    private void mystartActivity(Class c) {
-        Intent intent = new Intent(this, c);
-        startActivity(intent);
+    private void startTost(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
-
-
 }
+
 

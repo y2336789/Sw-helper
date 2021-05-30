@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,8 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bliss.csc.sw_helper.PostInfo;
 import com.bliss.csc.sw_helper.R;
+import com.bliss.csc.sw_helper.adapter.BoardFreeAdapter;
 import com.bliss.csc.sw_helper.adapter.BoardRoomAdapter;
+import com.bliss.csc.sw_helper.listener.OnPostListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,6 +37,8 @@ public class BoardRoomActivity extends BasicActivity {
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
     private RecyclerView recyclerView;
+    private BoardRoomAdapter boardRoomAdapter;
+    private ArrayList<PostInfo> postList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +69,16 @@ public class BoardRoomActivity extends BasicActivity {
                 }
             }
         });
+        postList = new ArrayList<>();
+        boardRoomAdapter = new BoardRoomAdapter(BoardRoomActivity.this, postList);
+        boardRoomAdapter.setOnPostListener(onPostListener);
 
         recyclerView = findViewById(R.id.recyclerView_room);
+        findViewById(R.id.floatingActionButton).setOnClickListener(onClickListener);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(BoardRoomActivity.this));
+        recyclerView.setAdapter(boardRoomAdapter);
 
 
     }
@@ -84,15 +97,50 @@ public class BoardRoomActivity extends BasicActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        postsUpdate();
+    }
 
-        CollectionReference collectionReference;
-        collectionReference = firebaseFirestore.collection("room");
+    OnPostListener onPostListener = new OnPostListener() {
+        @Override
+        public void onDelete(String id) {
+            Log.e("로그", "삭제");
+            firebaseFirestore.collection("room").document(id)
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            startTost("게시글을 삭제하였습니다.");
+                            postsUpdate();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            startTost("게시글을 삭제에 실패하였습니다  .");
+                        }
+                    });
+        }
+
+        @Override
+        public void onModify(String id) {
+
+            Log.e("로그", "수정");
+        }
+    };
+
+    private void mystartActivity(Class c) {
+        Intent intent = new Intent(this, c);
+        startActivity(intent);
+    }
+
+    private void postsUpdate() {
+        CollectionReference collectionReference = firebaseFirestore.collection("room");
         collectionReference.orderBy("createdAt", Query.Direction.DESCENDING).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            final ArrayList<PostInfo> postList = new ArrayList<>();
+                            postList.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 postList.add(new PostInfo(
@@ -102,20 +150,19 @@ public class BoardRoomActivity extends BasicActivity {
                                         new Date(document.getDate("createdAt").getTime()),
                                         document.getId().toString()));
                             }
-
-                            RecyclerView.Adapter mAdapter = new BoardRoomAdapter(BoardRoomActivity.this, postList);
-                            recyclerView.setAdapter(mAdapter);
+                            boardRoomAdapter.notifyDataSetChanged();
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
+
+
     }
 
-    private void mystartActivity(Class c) {
-        Intent intent = new Intent(this, c);
-        startActivity(intent);
+    private void startTost(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
-
-
 }
+
+
