@@ -19,10 +19,9 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bliss.csc.sw_helper.PostInfo;
 import com.bliss.csc.sw_helper.R;
+import com.bliss.csc.sw_helper.activity.PostActivity;
 import com.bliss.csc.sw_helper.listener.OnPostListener;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -68,7 +67,9 @@ public class BoardFreeAdapter extends RecyclerView.Adapter<BoardFreeAdapter.Boar
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(activity, PostActivity.class);
+                intent.putExtra("postInfo", mDataset.get(boardViewHolder.getAdapterPosition()));
+                activity.startActivity(intent);
             }
         });
 

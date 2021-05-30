@@ -1,9 +1,10 @@
 package com.bliss.csc.sw_helper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class PostInfo {
+public class PostInfo implements Serializable {
     private String title;
     private ArrayList<String> contents;
     private String publisher;

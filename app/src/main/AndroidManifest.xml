@@ -61,7 +61,8 @@
         <activity android:name=".activity.WriteTeamActivity"/>
         <activity android:name=".activity.BoardRoomActivity"/>
         <activity android:name=".activity.WriteRoomActivity"/>
-
+        <activity android:name=".activity.WritePostActivity"/>
+        <activity android:name=".activity.PostActivity"/>
 
     </application>
 
