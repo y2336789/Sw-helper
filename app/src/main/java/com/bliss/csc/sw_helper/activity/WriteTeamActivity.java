@@ -62,9 +62,7 @@ public class WriteTeamActivity extends BasicActivity {
         buttonsBackgroundLayout.setOnClickListener(onClickListener);
         findViewById(R.id.check).setOnClickListener(onClickListener);
         findViewById(R.id.img_btn).setOnClickListener(onClickListener);
-        findViewById(R.id.video_btn).setOnClickListener(onClickListener);
         findViewById(R.id.imageModify).setOnClickListener(onClickListener);
-        findViewById(R.id.videoModify).setOnClickListener(onClickListener);
         findViewById(R.id.delete).setOnClickListener(onClickListener);
         findViewById(R.id.contentsEditText).setOnFocusChangeListener(onFocusChangeListener);
         findViewById(R.id.title_editText).setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -143,9 +141,6 @@ public class WriteTeamActivity extends BasicActivity {
                 case R.id.img_btn:
                     myStartActivity(GalleryActivity.class, 0);
                     break;
-                case R.id.video_btn:
-                    myStartActivity(VideoGalleryActivity.class, 0);
-                    break;
                 case R.id.buttonsBackgroundLayout:
                     if (buttonsBackgroundLayout.getVisibility() == View.VISIBLE) {
                         buttonsBackgroundLayout.setVisibility(View.GONE);
@@ -153,10 +148,6 @@ public class WriteTeamActivity extends BasicActivity {
                     break;
                 case R.id.imageModify:
                     myStartActivity(GalleryActivity.class, 1); //1 써줘야 할수도?
-                    buttonsBackgroundLayout.setVisibility(View.GONE);
-                    break;
-                case R.id.videoModify:
-                    myStartActivity(VideoGalleryActivity.class, 1); //1 써줘야 할지도?
                     buttonsBackgroundLayout.setVisibility(View.GONE);
                     break;
                 case R.id.delete:

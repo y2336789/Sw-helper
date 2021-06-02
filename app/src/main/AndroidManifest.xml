@@ -54,14 +54,15 @@
         <activity android:name=".activity.BoardFreeActivity">
         </activity>
         <activity android:name=".activity.BoardListActivity"/>
-        <activity android:name=".NoticeActivity"/>
         <activity android:name=".activity.ReserveActivity"/>
         <activity android:name=".activity.study_time"/>
         <activity android:name=".activity.BoardTeamActivity"/>
         <activity android:name=".activity.WriteTeamActivity"/>
         <activity android:name=".activity.BoardRoomActivity"/>
         <activity android:name=".activity.WriteRoomActivity"/>
-
+        <activity android:name=".activity.WritePostActivity"/>
+        <activity android:name=".activity.PostActivity"/>
+        <activity android:name=".NoticeActivity"/>
 
     </application>
 

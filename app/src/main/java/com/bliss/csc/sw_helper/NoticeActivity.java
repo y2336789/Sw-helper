@@ -1,9 +1,9 @@
 package com.bliss.csc.sw_helper;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.EventLogTags;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,65 +19,73 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class NoticeActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private ArrayList<ItemObject> list =  new ArrayList();
+    RecyclerView recyclerView;
+    RecyclerAdapter adapter;
+    String melon_chart_url = "https://software.cbnu.ac.kr/bbs/bbs.php?db=notice";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        recyclerView.addItemDecoration(new ItemDecoration());
 
-        //AsyncTask 작동시킴(파싱)
-        new Description().execute();
+        recyclerView = findViewById(R.id.recyclerview_notice);
+
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        adapter = new RecyclerAdapter();
+        recyclerView.setAdapter(adapter);
+
+        getData();
     }
 
-    private class Description extends AsyncTask<Void, Void, Void> {
+    private void getData(){
+        MelonJsoup jsoupAsyncTask = new MelonJsoup();
+        jsoupAsyncTask.execute();
+    }
 
-        //진행바표시
-        private ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            //진행다일로그 시작
-            progressDialog = new ProgressDialog(NoticeActivity.this);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setMessage("잠시 기다려 주세요.");
-            progressDialog.show();
-        }
+    private class MelonJsoup extends AsyncTask<Void, Void, Void> {
+        ArrayList<String> listTitle = new ArrayList<>();
+        ArrayList<String> listUrl = new ArrayList<>();
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(Void... voids) {
+
             try {
-                Document doc = Jsoup.connect("https://software.cbnu.ac.kr/bbs/bbs.php?db=notice").get();
-                Elements mElementDataSize = doc.select("td.body_bold"); //필요한 녀석만 꼬집어서 지정
-                int mElementSize = mElementDataSize.size(); //목록이 몇개인지 알아낸다. 그만큼 루프를 돌려야 하나깐.
+                Document doc = Jsoup.connect(melon_chart_url).get();
+                final Elements rank_list1 = doc.select("td.body_bold nobr a");
 
-                for(Element elem : mElementDataSize){
-                    String my_title = elem.select(".body_bold b").text();
+                Handler handler = new Handler(Looper.getMainLooper()); // 객체생성
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        //순위정보
+                        for(Element element: rank_list1) {
+                            listTitle.add(element.text());
+                        }
 
-                    list.add(new ItemObject(my_title));
-                }
+                        for (Element element : rank_list1) {
+                            // 상세 주소만 나올 수 있도록 문자열 추출 작업
+                            String tmp = element.attr("href");
+                            listUrl.add(tmp);
+                        }
 
-                //추출한 전체 <li> 출력
-                //Log.d("debug :", "List " + mElementDataSize);
-            } catch (IOException e) {
+                        for (int i = 0; i < 25 ; i++) {
+                            NoticeInfo data = new NoticeInfo();
+                            data.setNoTitle(listTitle.get(i));
+                            data.setUrl(listUrl.get(i));
+                            adapter.addItem(data);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
-        @Override
-        protected void onPostExecute(Void result) {
-            //ArraList를 인자로 해서 어답터와 연결
-            MyAdapter myAdapter = new MyAdapter(list);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(myAdapter);
-
-            progressDialog.dismiss();
-        }
     }
+
 }
