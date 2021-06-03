@@ -75,11 +75,8 @@ public class BoardTeamActivity extends BasicActivity {
         boardTeamAdapter = new BoardTeamAdapter(BoardTeamActivity.this, postList);
         boardTeamAdapter.setOnPostListener(onPostListener);
 
-<<<<<<< HEAD
         recyclerView = findViewById(R.id.recyclerView_team);
-=======
         recyclerView = findViewById(R.id.recyclerView_free);
->>>>>>> 096c3861a037668c6604609d216d0d9cf305dcb2
         findViewById(R.id.floatingActionButton).setOnClickListener(onClickListener);
 
         recyclerView.setHasFixedSize(true);

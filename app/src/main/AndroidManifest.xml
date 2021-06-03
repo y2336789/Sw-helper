@@ -62,11 +62,7 @@
         <activity android:name=".activity.WriteRoomActivity"/>
         <activity android:name=".activity.WritePostActivity"/>
         <activity android:name=".activity.PostActivity"/>
-<<<<<<< HEAD
         <activity android:name=".NoticeActivity"/>
-=======
->>>>>>> 096c3861a037668c6604609d216d0d9cf305dcb2
-
     </application>
 
 </manifest>

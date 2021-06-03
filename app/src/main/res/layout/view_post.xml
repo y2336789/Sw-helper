@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_margin="5dp"
     app:cardCornerRadius="10dp">
 
@@ -11,11 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:background="#6E6EE3">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="5dp">
@@ -25,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 tools:text="테이블" />
@@ -40,22 +42,28 @@
                     android:id="@+id/imageView2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:srcCompat="@drawable/ic_baseline_more_vert_24" />
+                    app:srcCompat="@drawable/ic_baseline_more_vert_24"
+                    android:background="#A1A1D8"
+                    />
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
         <LinearLayout
+            android:backgroundTint="#6363EA"
             android:id="@+id/contentsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical">
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/createAtTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
+            android:textColor="@color/white"
             tools:text="2021-05-08" />
     </LinearLayout>
 

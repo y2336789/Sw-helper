@@ -129,9 +129,6 @@ public class BoardFreeAdapter extends RecyclerView.Adapter<BoardFreeAdapter.Boar
             public boolean onMenuItemClick(MenuItem menuItem) {
                 String id = mDataset.get(position).getId();
                 switch (menuItem.getItemId()) {
-                    case R.id.modify:
-                        onPostListener.onModify(id);
-                        return true;
                     case R.id.delete:
                         onPostListener.onDelete(id);
                         return true;
