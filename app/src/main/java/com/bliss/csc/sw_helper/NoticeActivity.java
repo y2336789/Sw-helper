@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class NoticeActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerAdapter adapter;
-    String melon_chart_url = "https://software.cbnu.ac.kr/bbs/bbs.php?db=notice";
+    String sw_url = "https://software.cbnu.ac.kr/bbs/bbs.php?db=notice";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,11 +41,11 @@ public class NoticeActivity extends AppCompatActivity {
     }
 
     private void getData(){
-        MelonJsoup jsoupAsyncTask = new MelonJsoup();
+        SwJsoup jsoupAsyncTask = new SwJsoup();
         jsoupAsyncTask.execute();
     }
 
-    private class MelonJsoup extends AsyncTask<Void, Void, Void> {
+    private class SwJsoup extends AsyncTask<Void, Void, Void> {
         ArrayList<String> listTitle = new ArrayList<>();
         ArrayList<String> listUrl = new ArrayList<>();
 
@@ -53,7 +53,7 @@ public class NoticeActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
 
             try {
-                Document doc = Jsoup.connect(melon_chart_url).get();
+                Document doc = Jsoup.connect(sw_url).get();
                 final Elements rank_list1 = doc.select("td.body_bold nobr a");
 
                 Handler handler = new Handler(Looper.getMainLooper()); // 객체생성
