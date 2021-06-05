@@ -20,7 +20,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView_title = (TextView) itemView.findViewById(R.id.textView_title);
+            textView_title = (TextView) itemView.findViewById(R.id.titleTextView);
 
             itemView.setClickable(true);
             itemView.setOnClickListener(new View.OnClickListener() {

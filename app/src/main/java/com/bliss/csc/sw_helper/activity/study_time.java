@@ -1,88 +1,80 @@
 package com.bliss.csc.sw_helper.activity;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Toast;
-
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.bliss.csc.sw_helper.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+import javax.annotation.Nullable;
+
 public class study_time extends AppCompatActivity {
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.reservation);
+        setContentView(R.layout.date_reservation);
+
     }
 
-    SharedPreferences pref = getSharedPreferences("sFile", Activity.MODE_PRIVATE);
-    SharedPreferences.Editor editor = pref.edit();
-
-    Button time1 = (Button) findViewById(R.id.time1);
-    Button time2 = (Button) findViewById(R.id.time2);
-    Button time3 = (Button) findViewById(R.id.time3);
-    Button time4 = (Button) findViewById(R.id.time4);
-    Button time5 = (Button) findViewById(R.id.time5);
-    Button time6 = (Button) findViewById(R.id.time6);
-    Button time7 = (Button) findViewById(R.id.time7);
-
-    String strColor;
-
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.time1:
-                Toast.makeText(getApplicationContext(), " 예약 완료", Toast.LENGTH_LONG).show();
-                editor.putString("on1", "#B363C6C6");
-                strColor = pref.getString("on1", "#AA2162");
-                time1.setBackgroundColor(Color.parseColor((strColor)));
-                editor.commit();
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void showPop(View view) {
+        switch(view.getId()){
+            case R.id.btn:
+                pop();
                 break;
-            case R.id.time2:
-                Toast.makeText(getApplicationContext(), " 예약 완료", Toast.LENGTH_LONG).show();
-                editor.putString("on2", "#B363C6C6");
-                strColor = pref.getString("on2", "#AA2162");
-                time2.setBackgroundColor(Color.parseColor((strColor)));
-                editor.commit();
-                break;
-            case R.id.time3:
-                Toast.makeText(getApplicationContext(), " 예약 완료", Toast.LENGTH_LONG).show();
-                editor.putString("on3", "#B363C6C6");
-                strColor = pref.getString("on3", "#AA2162");
-                time3.setBackgroundColor(Color.parseColor((strColor)));
-                editor.commit();
-                break;
-            case R.id.time4:
-                Toast.makeText(getApplicationContext(), " 예약 완료", Toast.LENGTH_LONG).show();
-                editor.putString("on4", "#B363C6C6");
-                strColor = pref.getString("on4", "#AA2162");
-                time4.setBackgroundColor(Color.parseColor((strColor)));
-                editor.commit();
-                break;
-            case R.id.time5:
-                Toast.makeText(getApplicationContext(), " 예약 완료", Toast.LENGTH_LONG).show();
-                editor.putString("on5", "#B363C6C6");
-                strColor = pref.getString("on5", "#AA2162");
-                time5.setBackgroundColor(Color.parseColor((strColor)));
-                editor.commit();
-                break;
-            case R.id.time6:
-                Toast.makeText(getApplicationContext(), " 예약 완료", Toast.LENGTH_LONG).show();
-                editor.putString("on6", "#B363C6C6");
-                strColor = pref.getString("on6", "#AA2162");
-                time6.setBackgroundColor(Color.parseColor((strColor)));
-                editor.commit();
-                break;
-            case R.id.time7:
-                Toast.makeText(getApplicationContext(), " 예약 완료", Toast.LENGTH_LONG).show();
-                editor.putString("on7", "#B363C6C6");
-                strColor = pref.getString("on7", "#AA2162");
-                time7.setBackgroundColor(Color.parseColor((strColor)));
-                editor.commit();
+            case R.id.cancel_reservation:
+                Toast.makeText(getApplicationContext(), "취소되었습니다.", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
+                startActivity(intent);
                 break;
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void pop() {
+        Calendar maxDate = Calendar.getInstance();
+        Calendar minDate = Calendar.getInstance();
+
+        DatePickerDialog dialog = new DatePickerDialog(
+                this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        Toast.makeText(study_time.this, year + "년 " + (month + 1) + "월 " + dayOfMonth + "일 ", Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent(getApplicationContext(), time_reservation.class);
+
+                        intent.putExtra("year", year);
+                        intent.putExtra("month", month);
+                        intent.putExtra("dayOfMonth", dayOfMonth);
+
+                        startActivity(intent);
+
+                    }
+                },
+                2021, 5 , 1
+        );
+        minDate.set(2021, 5, 1);
+        dialog.getDatePicker().setMinDate(minDate.getTime().getTime());
+        maxDate.set(2021, 11, 31);
+        dialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
+
+        dialog.show();
+
+    }
+
+    private void mystartActivity(Class c) {
+        Intent intent = new Intent(this, c);
+        startActivity(intent);
     }
 }

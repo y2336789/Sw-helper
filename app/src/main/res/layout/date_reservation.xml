@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_background">
+
+       <LinearLayout
+           android:id="@+id/board_time"
+           android:layout_width="391dp"
+           android:layout_height="510dp"
+           android:layout_marginTop="40dp"
+           android:background="@drawable/border"
+           android:orientation="vertical"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent">
+
+              <TextView
+                  android:id="@+id/textView2"
+                  android:layout_width="match_parent"
+                  android:layout_height="122dp"
+                  android:text="  \n   ※주의 사항"
+                  android:textSize="30sp" />
+
+              <TextView
+                  android:id="@+id/textView3"
+                  android:layout_width="358dp"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center"
+                  android:text="\n1. 시간은 7개의 타임으로 나누어져있습니다\n2. 예약은 한 타임만 가능합니다.\n3. 코로나로 인해서 마스크는 필히 착용해주세요.\n4. 음식물 취식은 되도록이면 지양해주세요.\n5. 퇴실 시에는 키를 학과 사무실에 꼭 반납해주세요.\n"
+                  android:textSize="16sp" />
+       </LinearLayout>
+
+       <Button
+           android:id="@+id/btn"
+           android:layout_width="94dp"
+           android:layout_height="42dp"
+           android:layout_marginTop="8dp"
+           android:onClick="showPop"
+           android:text="예약"
+           android:backgroundTint="#14148C"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintHorizontal_bias="0.93"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/board_time" />
+
+       <Button
+           android:id="@+id/cancel_reservation"
+           android:layout_width="94dp"
+           android:layout_height="42dp"
+           android:layout_marginTop="8dp"
+           android:onClick="showPop"
+           android:text="취소"
+           android:backgroundTint="#14148C"
+           app:layout_constraintEnd_toStartOf="@+id/btn"
+           app:layout_constraintHorizontal_bias="0.934"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/board_time" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

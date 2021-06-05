@@ -63,6 +63,7 @@
         <activity android:name=".activity.WritePostActivity"/>
         <activity android:name=".activity.PostActivity"/>
         <activity android:name=".NoticeActivity"/>
+        <activity android:name=".activity.time_reservation"/>
     </application>
 
 </manifest>
