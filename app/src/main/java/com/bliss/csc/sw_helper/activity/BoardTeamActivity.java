@@ -44,7 +44,7 @@ public class BoardTeamActivity extends BasicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_free);
+        setContentView(R.layout.activity_team);
 
         findViewById(R.id.floatingActionButton).setOnClickListener(onClickListener);
 
@@ -76,7 +76,6 @@ public class BoardTeamActivity extends BasicActivity {
         boardTeamAdapter.setOnPostListener(onPostListener);
 
         recyclerView = findViewById(R.id.recyclerView_team);
-        recyclerView = findViewById(R.id.recyclerView_free);
         findViewById(R.id.floatingActionButton).setOnClickListener(onClickListener);
 
         recyclerView.setHasFixedSize(true);
