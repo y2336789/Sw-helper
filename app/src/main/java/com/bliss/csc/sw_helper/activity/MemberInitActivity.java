@@ -2,6 +2,7 @@ package com.bliss.csc.sw_helper.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -13,8 +14,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.bliss.csc.sw_helper.MemberInfo;
 import com.bliss.csc.sw_helper.R;
 import com.bumptech.glide.Glide;
@@ -56,11 +61,6 @@ public class MemberInitActivity extends BasicActivity {
         findViewById(R.id.picture_btn).setOnClickListener(onClickListener);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -174,4 +174,21 @@ public class MemberInitActivity extends BasicActivity {
         Intent intent = new Intent(this, c);
         startActivityForResult(intent, 0);
     }
+
+    public void onBackPressed() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("종료 확인");
+        builder.setMessage("앱을 종료하시겠습니까?");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+                ActivityCompat.finishAffinity(MemberInitActivity.this);
+            }
+        });
+        builder.setNegativeButton("취소", null);
+        builder.show();
+    }
+
 }
